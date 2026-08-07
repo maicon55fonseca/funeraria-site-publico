@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SiteApiService, SiteConfigPublica, PlanoPublico, ComentarioPublico } from '../../services/site-api.service';
@@ -11,12 +11,15 @@ import { sanitizeSiteConfigMedia } from '../../utils/media-url';
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   config: SiteConfigPublica | null = null;
   planos: PlanoPublico[] = [];
   depoimentos: ComentarioPublico[] = [];
+  bannerSlides: { id: number; url_imagem: string; ordem?: number }[] = [];
+  slideIndex = 0;
   loadingPlanos = true;
   loadingDepoimentos = true;
+  private slideTimer: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     private api: SiteApiService,
@@ -27,6 +30,9 @@ export class HomePage implements OnInit {
     this.api.getConfig().subscribe({
       next: (res) => {
         this.config = sanitizeSiteConfigMedia(res.data);
+        this.bannerSlides = this.config?.banners || [];
+        this.slideIndex = 0;
+        this.iniciarSlider();
         this.cdr.detectChanges();
       },
     });
@@ -53,6 +59,32 @@ export class HomePage implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.pararSlider();
+  }
+
+  irParaSlide(i: number): void {
+    this.slideIndex = i;
+    this.iniciarSlider();
+    this.cdr.detectChanges();
+  }
+
+  private iniciarSlider(): void {
+    this.pararSlider();
+    if (this.bannerSlides.length < 2) return;
+    this.slideTimer = setInterval(() => {
+      this.slideIndex = (this.slideIndex + 1) % this.bannerSlides.length;
+      this.cdr.detectChanges();
+    }, 5000);
+  }
+
+  private pararSlider(): void {
+    if (this.slideTimer) {
+      clearInterval(this.slideTimer);
+      this.slideTimer = null;
+    }
   }
 
   money(v: number | string | null | undefined): string {

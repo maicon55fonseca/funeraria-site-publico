@@ -33,9 +33,18 @@ export function resolveMediaUrl(url?: string | null): string | null {
 
 export function sanitizeSiteConfigMedia(config: SiteConfigPublica | null | undefined): SiteConfigPublica | null {
   if (!config) return null;
+  const banners = (config.banners || [])
+    .map((b) => ({ ...b, url_imagem: resolveMediaUrl(b.url_imagem) || '' }))
+    .filter((b) => !!b.url_imagem);
+  const urlBanner = resolveMediaUrl(config.url_banner);
   return {
     ...config,
     url_logo: resolveMediaUrl(config.url_logo),
-    url_banner: resolveMediaUrl(config.url_banner),
+    url_banner: urlBanner,
+    banners: banners.length
+      ? banners
+      : urlBanner
+        ? [{ id: 0, url_imagem: urlBanner, ordem: 1 }]
+        : [],
   };
 }

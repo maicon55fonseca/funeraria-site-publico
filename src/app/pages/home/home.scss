@@ -7,17 +7,63 @@
     linear-gradient(135deg, rgba(18, 40, 32, 0.88), rgba(26, 77, 62, 0.55)),
     url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80') center/cover;
   color: #fff;
+  overflow: hidden;
+}
+
+.hero__slides {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.hero__slide.active {
+  opacity: 1;
 }
 
 .hero__veil {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(180deg, rgba(10, 22, 18, 0.15), rgba(10, 22, 18, 0.72));
+}
+
+.hero__dots {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.hero__dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 999px;
+  border: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+}
+
+.hero__dot.active {
+  background: #fff;
+  width: 1.35rem;
 }
 
 .hero__content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   padding: 4.5rem 0 3.5rem;
   max-width: 720px;
 }

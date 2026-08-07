@@ -19,6 +19,7 @@ export interface SiteConfigPublica {
   url_mapa?: string | null;
   url_logo?: string | null;
   url_banner?: string | null;
+  banners?: { id: number; url_imagem: string; ordem?: number }[];
   cor_primaria?: string | null;
   cor_rodape?: string | null;
   cor_fonte_rodape?: string | null;

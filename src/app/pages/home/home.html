@@ -1,4 +1,12 @@
-<section class="hero" [style.backgroundImage]="config?.url_banner ? 'url(' + config?.url_banner + ')' : null">
+<section class="hero" [class.hero--slider]="bannerSlides.length > 0">
+  <div class="hero__slides" *ngIf="bannerSlides.length">
+    <div
+      class="hero__slide"
+      *ngFor="let b of bannerSlides; let i = index"
+      [class.active]="i === slideIndex"
+      [style.backgroundImage]="'url(' + b.url_imagem + ')'"
+    ></div>
+  </div>
   <div class="hero__veil"></div>
   <div class="wrap hero__content">
     <p class="hero__eyebrow">Funerária Aliança</p>
@@ -10,6 +18,16 @@
       <a routerLink="/planos" class="btn btn--primary">Ver planos</a>
       <a routerLink="/" fragment="depoimentos" class="btn btn--ghost">Depoimentos</a>
     </div>
+  </div>
+  <div class="hero__dots" *ngIf="bannerSlides.length > 1">
+    <button
+      type="button"
+      *ngFor="let b of bannerSlides; let i = index"
+      class="hero__dot"
+      [class.active]="i === slideIndex"
+      (click)="irParaSlide(i)"
+      [attr.aria-label]="'Banner ' + (i + 1)"
+    ></button>
   </div>
 </section>
 
