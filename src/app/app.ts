@@ -12,6 +12,7 @@ import { sanitizeSiteConfigMedia } from './utils/media-url';
 })
 export class App implements OnInit {
   config: SiteConfigPublica | null = null;
+  logoUrl: string | null = null;
   mobileOpen = false;
   year = new Date().getFullYear();
 
@@ -24,6 +25,7 @@ export class App implements OnInit {
     this.api.getConfig().subscribe({
       next: (res) => {
         this.config = sanitizeSiteConfigMedia(res.data);
+        this.logoUrl = this.config?.url_logo || null;
         this.aplicarCores();
         this.cdr.detectChanges();
       },
@@ -35,10 +37,16 @@ export class App implements OnInit {
           cor_rodape: '#122820',
           cor_fonte_rodape: '#e8efe9',
         };
+        this.logoUrl = null;
         this.aplicarCores();
         this.cdr.detectChanges();
       },
     });
+  }
+
+  onLogoError(): void {
+    this.logoUrl = null;
+    this.cdr.detectChanges();
   }
 
   footerStyles(): Record<string, string> {

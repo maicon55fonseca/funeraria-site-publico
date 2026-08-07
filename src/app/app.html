@@ -1,8 +1,8 @@
 <header class="topbar">
   <div class="wrap topbar__inner">
-    <a routerLink="/" class="brand" [class.brand--com-logo]="!!config?.url_logo" (click)="mobileOpen = false">
-      <img *ngIf="config?.url_logo" [src]="config?.url_logo" alt="Funerária Aliança" class="brand__logo" />
-      <ng-container *ngIf="!config?.url_logo">
+    <a routerLink="/" class="brand" [class.brand--com-logo]="!!logoUrl" (click)="mobileOpen = false">
+      <img *ngIf="logoUrl" [src]="logoUrl" alt="Funerária Aliança" class="brand__logo" (error)="onLogoError()" />
+      <ng-container *ngIf="!logoUrl">
         <span class="brand__mark">FA</span>
         <span class="brand__name">Funerária <strong>Aliança</strong></span>
       </ng-container>

@@ -9,15 +9,19 @@ export function resolveMediaUrl(url?: string | null): string | null {
   const trimmed = url.trim();
   if (!trimmed) return null;
 
-  // data: e https públicos ok
+  // data: ok
   if (trimmed.startsWith('data:')) return trimmed;
 
   const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//i.test(trimmed);
+  // /storage no Railway multi-réplica costuma 404 — não usar como logo
+  const isRailwayStorage =
+    /funeraria-backend.*\.up\.railway\.app\/storage\//i.test(trimmed) ||
+    /^https?:\/\/[^/]+\/storage\/site\//i.test(trimmed);
 
-  if (isLocal) {
+  if (isLocal || isRailwayStorage) {
     if (typeof console !== 'undefined') {
       console.warn(
-        '[site] Imagem com URL local ignorada em produção. Reenvie logo/banner pelo sistema (Site → Configuração).',
+        '[site] Imagem com URL inválida ignorada. Reenvie logo/banner em Site → Configuração.',
         trimmed
       );
     }
