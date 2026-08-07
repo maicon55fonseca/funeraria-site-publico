@@ -1,0 +1,24 @@
+.plan-card__price small {
+  font-size: 0.95rem;
+  margin-left: 0.25rem;
+  color: var(--muted);
+}
+
+.plan-itens {
+  margin: 0.25rem 0 0.5rem;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.plan-itens li {
+  margin-bottom: 0.2rem;
+}
+
+.plan-card .btn {
+  margin-top: auto;
+}
+
+.muted {
+  color: var(--muted);
+}

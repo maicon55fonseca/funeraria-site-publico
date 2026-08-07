@@ -1,0 +1,27 @@
+<section class="section">
+  <div class="wrap">
+    <h1 class="section__title">Planos funerários</h1>
+    <p class="section__sub">Escolha o plano ideal e avance para o cadastro de adesão.</p>
+
+    <div *ngIf="loading" class="muted">Carregando planos…</div>
+    <div *ngIf="erro" class="alert alert--err">Não foi possível carregar os planos. Tente novamente em instantes.</div>
+
+    <div class="grid-plans" *ngIf="!loading && !erro">
+      <article class="plan-card" *ngFor="let p of planos">
+        <h3>{{ p.nome }}</h3>
+        <div class="plan-card__price">{{ money(p.valor_mensal) }}<small>/mês</small></div>
+        <p class="plan-card__meta" *ngIf="p.valor_adesao">Taxa de adesão: {{ money(p.valor_adesao) }}</p>
+        <p class="plan-card__meta" *ngIf="p.carencia_dias">Carência: {{ p.carencia_dias }} dias</p>
+        <p>{{ p.descricao || 'Assistência funerária conforme coberturas do plano.' }}</p>
+
+        <ul class="plan-itens" *ngIf="p.produtos?.length || p.servicos?.length">
+          <li *ngFor="let item of p.produtos">{{ item.nome }}</li>
+          <li *ngFor="let item of p.servicos">{{ item.nome }}</li>
+        </ul>
+
+        <a class="btn btn--primary" [routerLink]="['/adesao', p.id]">Contratar este plano</a>
+      </article>
+      <p *ngIf="!planos.length" class="muted">Nenhum plano ativo cadastrado no sistema.</p>
+    </div>
+  </div>
+</section>

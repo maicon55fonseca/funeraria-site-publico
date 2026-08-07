@@ -1,0 +1,47 @@
+<section class="section">
+  <div class="wrap">
+    <h1 class="section__title">Depoimentos</h1>
+    <p class="section__sub">Comentários de famílias que confiaram na Funerária Aliança. Novos depoimentos passam por aprovação antes de aparecer aqui.</p>
+
+    <div *ngIf="loading" class="muted">Carregando…</div>
+
+    <div class="grid-comments" *ngIf="!loading">
+      <article class="comment-card" *ngFor="let c of itens">
+        <p class="comment-card__text">“{{ c.texto }}”</p>
+        <div class="comment-card__meta">
+          <strong>{{ c.nome }}</strong>
+          <span *ngIf="c.cidade"> — {{ c.cidade }}</span>
+        </div>
+      </article>
+      <p *ngIf="!itens.length" class="muted">Ainda não há depoimentos publicados. Seja o primeiro a enviar!</p>
+    </div>
+
+    <div class="form-card">
+      <h2>Deixe seu comentário</h2>
+      <div class="alert alert--ok" *ngIf="okMsg">{{ okMsg }}</div>
+      <div class="alert alert--err" *ngIf="erroMsg">{{ erroMsg }}</div>
+      <form class="form-grid" (ngSubmit)="enviar()">
+        <div class="form-field">
+          <label>Nome *</label>
+          <input [(ngModel)]="form.nome" name="nome" />
+          <small class="error" *ngIf="erros['nome']">{{ erros['nome'] }}</small>
+        </div>
+        <div class="form-field">
+          <label>Cidade</label>
+          <input [(ngModel)]="form.cidade" name="cidade" />
+        </div>
+        <div class="form-field form-field--full">
+          <label>Comentário *</label>
+          <textarea rows="4" [(ngModel)]="form.texto" name="texto"></textarea>
+          <small class="error" *ngIf="erros['texto']">{{ erros['texto'] }}</small>
+        </div>
+        <div class="form-field form-field--full">
+          <button type="submit" class="btn btn--primary" [disabled]="enviando">
+            <span class="spinner" *ngIf="enviando"></span>
+            {{ enviando ? 'Enviando…' : 'Enviar comentário' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

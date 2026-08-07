@@ -1,0 +1,142 @@
+<section class="section">
+  <div class="wrap adesao">
+    <a routerLink="/planos" class="back">← Voltar aos planos</a>
+    <h1 class="section__title">Adesão ao plano</h1>
+
+    <div *ngIf="loading" class="muted">Carregando…</div>
+
+    <div class="alert alert--ok" *ngIf="sucesso">
+      <strong>Adesão realizada com sucesso!</strong>
+      <p *ngIf="sucesso.numero_contrato">Contrato nº {{ sucesso.numero_contrato }}</p>
+      <p *ngIf="sucesso.cobranca?.mensagem">{{ sucesso.cobranca.mensagem }}</p>
+      <p *ngIf="sucesso.cobranca?.pix_payload"><strong>PIX:</strong> {{ sucesso.cobranca.pix_payload }}</p>
+      <a *ngIf="sucesso.cobranca?.url_boleto || sucesso.cobranca?.invoice_url || sucesso.cobranca?.payment_book_url"
+         class="btn btn--primary"
+         [href]="sucesso.cobranca?.url_boleto || sucesso.cobranca?.invoice_url || sucesso.cobranca?.payment_book_url"
+         target="_blank" rel="noopener">Abrir cobrança</a>
+    </div>
+
+    <div class="alert alert--err" *ngIf="erroMsg && !sucesso">{{ erroMsg }}</div>
+
+    <div class="adesao__grid" *ngIf="!loading && plano && !sucesso">
+      <aside class="resumo">
+        <h3>{{ plano.nome }}</h3>
+        <div class="plan-card__price">{{ money(plano.valor_mensal) }}<small>/mês</small></div>
+        <p *ngIf="plano.valor_adesao">Adesão: {{ money(plano.valor_adesao) }}</p>
+        <p *ngIf="config?.quantidade_parcelas">Parcelas geradas: {{ config?.quantidade_parcelas }}</p>
+        <p>{{ plano.descricao || 'Finalize seu cadastro para concluir a contratação.' }}</p>
+        <ul class="resumo-itens" *ngIf="plano.produtos?.length || plano.servicos?.length">
+          <li *ngFor="let item of plano.produtos">{{ item.nome }}</li>
+          <li *ngFor="let item of plano.servicos">{{ item.nome }}</li>
+        </ul>
+      </aside>
+
+      <form class="form-card" (ngSubmit)="enviar()">
+        <h3>Dados pessoais</h3>
+        <div class="form-grid">
+          <div class="form-field form-field--full">
+            <label>Nome completo *</label>
+            <input [(ngModel)]="form.nome" name="nome" required />
+            <small class="error" *ngIf="erros['nome']">{{ erros['nome'] }}</small>
+          </div>
+          <div class="form-field">
+            <label>CPF *</label>
+            <input [(ngModel)]="form.cpf" name="cpf" (input)="maskCpf($event)" maxlength="14" required />
+            <small class="error" *ngIf="erros['cpf']">{{ erros['cpf'] }}</small>
+          </div>
+          <div class="form-field">
+            <label>Telefone *</label>
+            <input [(ngModel)]="form.telefone" name="telefone" (input)="maskPhone($event)" maxlength="15" required />
+            <small class="error" *ngIf="erros['telefone']">{{ erros['telefone'] }}</small>
+          </div>
+          <div class="form-field">
+            <label>E-mail</label>
+            <input type="email" [(ngModel)]="form.email" name="email" />
+          </div>
+          <div class="form-field">
+            <label>Data de nascimento</label>
+            <input type="date" [(ngModel)]="form.data_nascimento" name="data_nascimento" />
+          </div>
+          <div class="form-field">
+            <label>Sexo</label>
+            <select [(ngModel)]="form.sexo" name="sexo">
+              <option value="">Selecione</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>CEP</label>
+            <input [(ngModel)]="form.cep" name="cep" (input)="maskCep($event)" maxlength="9" />
+          </div>
+          <div class="form-field">
+            <label>Número</label>
+            <input [(ngModel)]="form.numero" name="numero" />
+          </div>
+          <div class="form-field form-field--full">
+            <label>Endereço</label>
+            <input [(ngModel)]="form.endereco" name="endereco" />
+          </div>
+          <div class="form-field">
+            <label>Bairro</label>
+            <input [(ngModel)]="form.bairro" name="bairro" />
+          </div>
+          <div class="form-field">
+            <label>Complemento</label>
+            <input [(ngModel)]="form.complemento" name="complemento" />
+          </div>
+          <div class="form-field">
+            <label>Cidade</label>
+            <input [(ngModel)]="form.cidade" name="cidade" />
+          </div>
+          <div class="form-field">
+            <label>UF</label>
+            <input [(ngModel)]="form.estado" name="estado" maxlength="2" />
+          </div>
+        </div>
+
+        <h3 class="mt">Pagamento</h3>
+        <div class="meios">
+          <label *ngFor="let m of meios" class="meio">
+            <input type="radio" name="meio_pagamento" [value]="m" [(ngModel)]="form.meio_pagamento" />
+            {{ labelMeio(m) }}
+          </label>
+        </div>
+        <small class="error" *ngIf="erros['meio_pagamento']">{{ erros['meio_pagamento'] }}</small>
+
+        <div class="form-grid" *ngIf="form.meio_pagamento === 'cartao_credito'">
+          <div class="form-field form-field--full">
+            <label>Nome no cartão *</label>
+            <input [(ngModel)]="form.cartao_titular" name="cartao_titular" />
+            <small class="error" *ngIf="erros['cartao_titular']">{{ erros['cartao_titular'] }}</small>
+          </div>
+          <div class="form-field form-field--full">
+            <label>Número do cartão *</label>
+            <input [(ngModel)]="form.cartao_numero" name="cartao_numero" (input)="maskCard($event)" maxlength="19" autocomplete="cc-number" />
+            <small class="error" *ngIf="erros['cartao_numero']">{{ erros['cartao_numero'] }}</small>
+          </div>
+          <div class="form-field">
+            <label>Mês *</label>
+            <input [(ngModel)]="form.cartao_mes" name="cartao_mes" maxlength="2" placeholder="MM" />
+          </div>
+          <div class="form-field">
+            <label>Ano *</label>
+            <input [(ngModel)]="form.cartao_ano" name="cartao_ano" maxlength="4" placeholder="AAAA" />
+          </div>
+          <div class="form-field">
+            <label>CVV *</label>
+            <input [(ngModel)]="form.cartao_cvv" name="cartao_cvv" maxlength="4" autocomplete="cc-csc" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn-block" [disabled]="enviando">
+          <span class="spinner" *ngIf="enviando"></span>
+          {{ enviando ? 'Processando…' : 'Finalizar adesão' }}
+        </button>
+      </form>
+    </div>
+
+    <p *ngIf="!loading && !plano && !sucesso" class="alert alert--err">Plano não encontrado.</p>
+  </div>
+</section>

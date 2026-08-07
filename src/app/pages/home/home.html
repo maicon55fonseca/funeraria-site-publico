@@ -1,0 +1,66 @@
+<section class="hero" [style.backgroundImage]="config?.url_banner ? 'url(' + config?.url_banner + ')' : null">
+  <div class="hero__veil"></div>
+  <div class="wrap hero__content">
+    <p class="hero__eyebrow">Funerária Aliança</p>
+    <h1>{{ config?.titulo_hero || 'Cuidado e acolhimento para sua família' }}</h1>
+    <p class="hero__sub">
+      {{ config?.subtitulo_hero || 'Escolha um plano funerário com transparência e finalize sua adesão online com segurança.' }}
+    </p>
+    <div class="hero__actions">
+      <a routerLink="/planos" class="btn btn--primary">Ver planos</a>
+      <a routerLink="/depoimentos" class="btn btn--ghost">Depoimentos</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sobre">
+  <div class="wrap">
+    <h2 class="section__title">Sobre nós</h2>
+    <p class="section__sub">
+      {{ config?.texto_sobre || 'A Funerária Aliança oferece planos pensados para oferecer tranquilidade e suporte completo no momento mais delicado.' }}
+    </p>
+  </div>
+</section>
+
+<section class="section section--soft" id="localizacao" *ngIf="config?.endereco || config?.url_mapa">
+  <div class="wrap localizacao">
+    <div>
+      <h2 class="section__title">Localização</h2>
+      <p class="section__sub">{{ config?.endereco }}</p>
+      <a *ngIf="config?.url_mapa" class="btn btn--primary localizacao__btn" [href]="config?.url_mapa!" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z"/>
+        </svg>
+        Abrir no Google Maps
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--soft">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="section__title">Planos em destaque</h2>
+        <p class="section__sub">Valores atualizados diretamente do sistema.</p>
+      </div>
+      <a routerLink="/planos" class="btn btn--ghost">Ver todos</a>
+    </div>
+
+    <div *ngIf="loadingPlanos" class="muted">Carregando planos…</div>
+    <div class="grid-plans" *ngIf="!loadingPlanos">
+      <article class="plan-card" *ngFor="let p of planos">
+        <h3>{{ p.nome }}</h3>
+        <div class="plan-card__price">{{ money(p.valor_mensal) }}<small>/mês</small></div>
+        <p class="plan-card__meta" *ngIf="p.valor_adesao">Adesão: {{ money(p.valor_adesao) }}</p>
+        <p>{{ p.descricao || 'Cobertura e assistência conforme o plano escolhido.' }}</p>
+        <ul class="plan-itens-mini" *ngIf="p.produtos?.length">
+          <li *ngFor="let item of p.produtos | slice:0:4">{{ item.nome }}</li>
+          <li *ngIf="(p.produtos?.length || 0) > 4">+ {{ (p.produtos?.length || 0) - 4 }} produtos</li>
+        </ul>
+        <a class="btn btn--primary" [routerLink]="['/adesao', p.id]">Contratar</a>
+      </article>
+      <p *ngIf="!planos.length" class="muted">Nenhum plano ativo disponível no momento.</p>
+    </div>
+  </div>
+</section>

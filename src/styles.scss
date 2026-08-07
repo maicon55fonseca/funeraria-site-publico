@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand: #1a4d3e;
+  --footer-bg: #122820;
+  --ink: #1c2b26;
+  --muted: #5c6f67;
+  --paper: #faf8f4;
+  --sand: #efe8dc;
+  --card: #ffffff;
+  --line: rgba(26, 77, 62, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(26, 77, 62, 0.12), transparent 55%),
+    radial-gradient(900px 400px at 90% 0%, rgba(180, 140, 90, 0.12), transparent 50%),
+    var(--paper);
+  color: var(--ink);
+  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.wrap {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.65rem 1.15rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(26, 77, 62, 0.22);
+}
+
+.btn--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: rgba(26, 77, 62, 0.25);
+  color: var(--brand);
+}
+
+.section {
+  padding: 3.5rem 0;
+}
+
+.section__title {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+
+.section__sub {
+  max-width: 54ch;
+}
+
+.grid-plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.plan-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 12px 28px rgba(28, 43, 38, 0.05);
+}
+
+.plan-card__price {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.8rem;
+  color: var(--brand);
+}
+
+.plan-card__meta {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-field--full {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.65rem 0.85rem;
+  font: inherit;
+  background: #fff;
+}
+
+.form-field small.error {
+  color: #b42318;
+}
+
+.alert {
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.alert--ok {
+  background: #e8f5ef;
+  color: #14553f;
+}
+
+.alert--err {
+  background: #fdecea;
+  color: #8a1f17;
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
