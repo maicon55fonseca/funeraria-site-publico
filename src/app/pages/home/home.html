@@ -8,7 +8,7 @@
     </p>
     <div class="hero__actions">
       <a routerLink="/planos" class="btn btn--primary">Ver planos</a>
-      <a routerLink="/depoimentos" class="btn btn--ghost">Depoimentos</a>
+      <a routerLink="/" fragment="depoimentos" class="btn btn--ghost">Depoimentos</a>
     </div>
   </div>
 </section>
@@ -61,6 +61,30 @@
         <a class="btn btn--primary" [routerLink]="['/adesao', p.id]">Contratar</a>
       </article>
       <p *ngIf="!planos.length" class="muted">Nenhum plano ativo disponível no momento.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="depoimentos">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="section__title">Depoimentos</h2>
+        <p class="section__sub">O que as famílias dizem sobre o atendimento da Funerária Aliança.</p>
+      </div>
+      <a routerLink="/depoimentos" class="btn btn--ghost">Enviar comentário</a>
+    </div>
+
+    <div *ngIf="loadingDepoimentos" class="muted">Carregando depoimentos…</div>
+    <div class="grid-comments" *ngIf="!loadingDepoimentos">
+      <article class="comment-card" *ngFor="let c of depoimentos">
+        <p class="comment-card__text">“{{ c.texto }}”</p>
+        <div class="comment-card__meta">
+          <strong>{{ c.nome }}</strong>
+          <span *ngIf="c.cidade"> — {{ c.cidade }}</span>
+        </div>
+      </article>
+      <p *ngIf="!depoimentos.length" class="muted">Ainda não há depoimentos publicados.</p>
     </div>
   </div>
 </section>

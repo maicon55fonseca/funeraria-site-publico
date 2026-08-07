@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { SiteApiService, SiteConfigPublica, PlanoPublico } from '../../services/site-api.service';
+import { SiteApiService, SiteConfigPublica, PlanoPublico, ComentarioPublico } from '../../services/site-api.service';
 import { sanitizeSiteConfigMedia } from '../../utils/media-url';
 
 @Component({
@@ -14,7 +14,9 @@ import { sanitizeSiteConfigMedia } from '../../utils/media-url';
 export class HomePage implements OnInit {
   config: SiteConfigPublica | null = null;
   planos: PlanoPublico[] = [];
+  depoimentos: ComentarioPublico[] = [];
   loadingPlanos = true;
+  loadingDepoimentos = true;
 
   constructor(
     private api: SiteApiService,
@@ -36,6 +38,18 @@ export class HomePage implements OnInit {
       },
       error: () => {
         this.loadingPlanos = false;
+        this.cdr.detectChanges();
+      },
+    });
+    this.api.getComentarios().subscribe({
+      next: (res) => {
+        this.depoimentos = res.data || [];
+        this.loadingDepoimentos = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.depoimentos = [];
+        this.loadingDepoimentos = false;
         this.cdr.detectChanges();
       },
     });

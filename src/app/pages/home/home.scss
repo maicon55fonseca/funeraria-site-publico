@@ -103,9 +103,37 @@
   color: var(--muted);
 }
 
+.grid-comments {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.comment-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.2rem;
+}
+
+.comment-card__text {
+  color: var(--ink);
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+}
+
+.comment-card__meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 @media (max-width: 720px) {
   .section-head {
     flex-direction: column;
     align-items: start;
+  }
+
+  #depoimentos {
+    scroll-margin-top: 88px;
   }
 }

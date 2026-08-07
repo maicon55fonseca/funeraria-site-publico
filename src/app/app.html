@@ -10,7 +10,7 @@
     <nav class="nav" [class.open]="mobileOpen">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="mobileOpen = false">Início</a>
       <a routerLink="/planos" routerLinkActive="active" (click)="mobileOpen = false">Planos</a>
-      <a routerLink="/depoimentos" routerLinkActive="active" (click)="mobileOpen = false">Depoimentos</a>
+      <a routerLink="/" fragment="depoimentos" (click)="mobileOpen = false">Depoimentos</a>
       <a *ngIf="whatsappLink()" [href]="whatsappLink()!" target="_blank" rel="noopener" class="btn btn--ghost" (click)="mobileOpen = false">WhatsApp</a>
       <a routerLink="/planos" class="btn btn--primary" (click)="mobileOpen = false">Contratar plano</a>
     </nav>
