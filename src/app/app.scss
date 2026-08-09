@@ -176,30 +176,32 @@
 .footer__social a {
   color: var(--footer-fg, #e8efe9);
   text-decoration: none;
-  width: 2.4rem;
   height: 2.4rem;
+  padding: 0 0.9rem 0 0.6rem;
   border: 1px solid color-mix(in srgb, var(--footer-fg, #e8efe9) 35%, transparent);
-  border-radius: 50%;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  font-weight: 600;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .footer__social a svg {
   width: 1.2rem;
   height: 1.2rem;
+  flex-shrink: 0;
   display: block;
 }
 
 .footer__social a.footer__social-ig {
-  border-color: transparent;
-  background: transparent;
+  border-color: color-mix(in srgb, var(--footer-fg, #e8efe9) 35%, transparent);
 }
 
 .footer__social a.footer__social-ig svg {
-  width: 1.45rem;
-  height: 1.45rem;
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 .footer__social a:hover {
