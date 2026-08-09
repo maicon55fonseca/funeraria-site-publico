@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
@@ -89,6 +89,7 @@ export interface ParceiroPublico {
 @Injectable({ providedIn: 'root' })
 export class SiteApiService {
   private base = `${environment.apiUrl}/public/site`;
+  private config$?: Observable<{ data: SiteConfigPublica }>;
 
   constructor(private http: HttpClient) {}
 
@@ -105,9 +106,14 @@ export class SiteApiService {
   }
 
   getConfig(): Observable<{ data: SiteConfigPublica }> {
-    return this.http.get<{ data: SiteConfigPublica }>(`${this.base}/config`, {
-      params: this.dominioParams(),
-    });
+    if (!this.config$) {
+      this.config$ = this.http
+        .get<{ data: SiteConfigPublica }>(`${this.base}/config`, {
+          params: this.dominioParams(),
+        })
+        .pipe(shareReplay(1));
+    }
+    return this.config$;
   }
 
   getPlanos(): Observable<{ data: PlanoPublico[] }> {

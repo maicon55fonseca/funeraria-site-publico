@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import * as QRCode from 'qrcode';
 import { SiteApiService, PlanoPublico, SiteConfigPublica } from '../../services/site-api.service';
 
 @Component({
@@ -198,9 +197,15 @@ export class AdesaoPage implements OnInit {
   private gerarQrCodePix(payload: string | null | undefined): void {
     this.pixQrCodeUrl = null;
     if (!payload) return;
-    QRCode.toDataURL(payload, { width: 220, margin: 1 })
+    import('qrcode')
+      .then((QRCode) => {
+        const toDataURL = (QRCode as any).toDataURL || (QRCode as any).default?.toDataURL;
+        if (typeof toDataURL !== 'function') return null;
+        return toDataURL(payload, { width: 220, margin: 1 });
+      })
       .then((url) => {
-        this.pixQrCodeUrl = url;
+        if (!url) return;
+        this.pixQrCodeUrl = url as string;
         this.cdr.detectChanges();
       })
       .catch(() => {

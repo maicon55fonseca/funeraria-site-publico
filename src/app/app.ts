@@ -22,6 +22,10 @@ export class App implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Pintar shell imediatamente (zoneless) enquanto a config carrega
+    this.aplicarCores();
+    this.cdr.detectChanges();
+
     this.api.getConfig().subscribe({
       next: (res) => {
         this.config = sanitizeSiteConfigMedia(res.data);
