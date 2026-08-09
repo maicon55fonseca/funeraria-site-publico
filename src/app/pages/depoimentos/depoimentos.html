@@ -7,6 +7,9 @@
 
     <div class="grid-comments" *ngIf="!loading">
       <article class="comment-card" *ngFor="let c of itens">
+        <div class="comment-card__head" *ngIf="c.foto_url">
+          <img [src]="c.foto_url" alt="" class="comment-card__avatar" />
+        </div>
         <p class="comment-card__text">“{{ c.texto }}”</p>
         <div class="comment-card__meta">
           <strong>{{ c.nome }}</strong>
@@ -50,6 +53,16 @@
           <input [(ngModel)]="form.instagram" name="instagram" placeholder="seu.usuario" />
           <small class="error" *ngIf="erros['instagram']">{{ erros['instagram'] }}</small>
           <small class="form-field__hint">Se informar, exibimos um link para seu Instagram junto do depoimento, passando mais confiança a quem visita o site.</small>
+        </div>
+        <div class="form-field">
+          <label>Sua foto (opcional)</label>
+          <input type="file" accept="image/*" (change)="onFotoSelecionada($event)" />
+          <small class="error" *ngIf="erros['foto']">{{ erros['foto'] }}</small>
+          <small class="form-field__hint">Se enviar, sua foto aparece junto do depoimento.</small>
+          <div class="foto-preview" *ngIf="fotoPreviewUrl">
+            <img [src]="fotoPreviewUrl" alt="Prévia da foto" />
+            <button type="button" class="foto-preview__remove" (click)="removerFoto()">Remover</button>
+          </div>
         </div>
         <div class="form-field form-field--full">
           <label>Comentário *</label>

@@ -54,6 +54,7 @@ export interface ComentarioPublico {
   cidade?: string | null;
   instagram?: string | null;
   instagram_url?: string | null;
+  foto_url?: string | null;
   texto: string;
   aprovado_em?: string | null;
 }
@@ -99,8 +100,15 @@ export class SiteApiService {
     });
   }
 
-  criarComentario(payload: { nome: string; cidade?: string; instagram?: string; texto: string }): Observable<{ message: string }> {
-    const body = { ...payload, dominio: this.dominioAtual() || undefined };
-    return this.http.post<{ message: string }>(`${this.base}/comentarios`, body);
+  criarComentario(payload: { nome: string; cidade?: string; instagram?: string; texto: string; foto?: File }): Observable<{ message: string }> {
+    const form = new FormData();
+    form.append('nome', payload.nome);
+    if (payload.cidade) form.append('cidade', payload.cidade);
+    if (payload.instagram) form.append('instagram', payload.instagram);
+    form.append('texto', payload.texto);
+    if (payload.foto) form.append('foto', payload.foto);
+    const dominio = this.dominioAtual();
+    if (dominio) form.append('dominio', dominio);
+    return this.http.post<{ message: string }>(`${this.base}/comentarios`, form);
   }
 }

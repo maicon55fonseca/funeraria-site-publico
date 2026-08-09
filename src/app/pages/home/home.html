@@ -98,6 +98,9 @@
     <div *ngIf="loadingDepoimentos" class="muted">Carregando depoimentos…</div>
     <div class="grid-comments" *ngIf="!loadingDepoimentos">
       <article class="comment-card" *ngFor="let c of depoimentos">
+        <div class="comment-card__head" *ngIf="c.foto_url">
+          <img [src]="c.foto_url" alt="" class="comment-card__avatar" />
+        </div>
         <p class="comment-card__text">“{{ c.texto }}”</p>
         <div class="comment-card__meta">
           <strong>{{ c.nome }}</strong>

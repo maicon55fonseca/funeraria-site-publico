@@ -162,6 +162,18 @@
   padding: 1.2rem;
 }
 
+.comment-card__head {
+  margin-bottom: 0.6rem;
+}
+
+.comment-card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
 .comment-card__text {
   color: var(--ink);
   font-size: 1.05rem;

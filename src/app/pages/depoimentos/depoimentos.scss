@@ -12,6 +12,18 @@
   padding: 1.2rem;
 }
 
+.comment-card__head {
+  margin-bottom: 0.6rem;
+}
+
+.comment-card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
 .comment-card__text {
   color: var(--ink);
   font-size: 1.05rem;
@@ -44,6 +56,31 @@
 
 .comment-card__instagram:hover {
   border-color: var(--brand);
+}
+
+.foto-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.foto-preview img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+.foto-preview__remove {
+  border: 0;
+  background: none;
+  color: #b42318;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
 }
 
 .form-card {
