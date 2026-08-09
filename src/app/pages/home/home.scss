@@ -266,9 +266,8 @@
   }
 
   /*
-   * No celular a altura do slide acompanha a proporção REAL da imagem ativa.
-   * Antes havia aspect-ratio fixo (16/10): artes panorâmicas sobravam verde;
-   * artes mais "altas" preenchiam melhor — por isso parecia inconsistente.
+   * Celular: slide na altura da arte (sem caixa verde extra).
+   * Controles sobre a imagem; botões em fundo claro da página.
    */
   .hero.hero--slider {
     display: flex;
@@ -277,7 +276,7 @@
     min-height: 0;
     height: auto;
     max-height: none;
-    background: #12281f;
+    background: transparent;
   }
 
   .hero--slider .hero__slides {
@@ -287,7 +286,7 @@
     width: 100%;
     flex: 0 0 auto;
     line-height: 0;
-    background: #f5f0e6;
+    background: transparent;
   }
 
   .hero--slider .hero__slide {
@@ -316,21 +315,29 @@
     display: none;
   }
 
+  /* Pontinhos/pausa por cima da arte — sem faixa verde */
   .hero--slider .hero__controls {
     position: relative;
     order: 2;
-    inset: auto;
-    top: auto;
-    bottom: auto;
-    padding: 0.55rem 0.75rem;
-    background: #12281f;
+    margin-top: -2.55rem;
+    padding: 0.35rem 0.75rem 0.5rem;
+    background: transparent;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .hero--slider .hero__dot,
+  .hero--slider .hero__pause {
+    pointer-events: auto;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
   }
 
   .hero--slider .hero__content {
     position: relative;
     z-index: 2;
     order: 3;
-    padding: 0.85rem 0 1.15rem;
+    padding: 0.9rem 0 1rem;
+    background: transparent;
   }
 
   .hero--slider .hero__actions {
@@ -346,6 +353,12 @@
     justify-content: center;
     font-size: 0.92rem;
     padding: 0.7rem 0.9rem;
+  }
+
+  .hero--slider .btn--ghost {
+    border-color: rgba(18, 40, 31, 0.35);
+    color: #12281f;
+    background: #fff;
   }
 
   .hero--slider .hero__dot {
