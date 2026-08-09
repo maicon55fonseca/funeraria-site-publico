@@ -12,6 +12,11 @@ export function resolveMediaUrl(url?: string | null): string | null {
   // data: ok
   if (trimmed.startsWith('data:')) return trimmed;
 
+  // API às vezes devolve http:// no Railway — site é HTTPS
+  if (/^http:\/\/funeraria-backend.*\.up\.railway\.app\//i.test(trimmed)) {
+    return trimmed.replace(/^http:/i, 'https:');
+  }
+
   const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//i.test(trimmed);
   // /storage no Railway multi-réplica costuma 404 — não usar como logo
   const isRailwayStorage =
