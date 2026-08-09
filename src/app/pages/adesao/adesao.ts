@@ -84,7 +84,7 @@ export class AdesaoPage implements OnInit {
   }
 
   labelMeio(m: string): string {
-    if (m === 'pix') return 'PIX';
+    if (m === 'pix') return 'PIX automático';
     if (m === 'cartao_credito') return 'Cartão de crédito';
     return 'Boleto / Carnê';
   }
