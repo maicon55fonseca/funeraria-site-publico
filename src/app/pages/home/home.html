@@ -9,11 +9,13 @@
   </div>
   <div class="hero__veil"></div>
   <div class="wrap hero__content">
-    <p class="hero__eyebrow">Funerária Aliança</p>
-    <h1>{{ config?.titulo_hero || 'Cuidado e acolhimento para sua família' }}</h1>
-    <p class="hero__sub">
-      {{ config?.subtitulo_hero || 'Escolha um plano funerário com transparência e finalize sua adesão online com segurança.' }}
-    </p>
+    <ng-container *ngIf="!bannerSlides.length">
+      <p class="hero__eyebrow">Funerária Aliança</p>
+      <h1>{{ config?.titulo_hero || 'Cuidado e acolhimento para sua família' }}</h1>
+      <p class="hero__sub">
+        {{ config?.subtitulo_hero || 'Escolha um plano funerário com transparência e finalize sua adesão online com segurança.' }}
+      </p>
+    </ng-container>
     <div class="hero__actions">
       <a routerLink="/planos" class="btn btn--primary">Ver planos</a>
       <a routerLink="/" fragment="depoimentos" class="btn btn--ghost">Depoimentos</a>
