@@ -46,10 +46,10 @@
           <input [(ngModel)]="form.cidade" name="cidade" />
         </div>
         <div class="form-field">
-          <label>@ do Instagram *</label>
+          <label>@ do Instagram (opcional)</label>
           <input [(ngModel)]="form.instagram" name="instagram" placeholder="seu.usuario" />
           <small class="error" *ngIf="erros['instagram']">{{ erros['instagram'] }}</small>
-          <small class="form-field__hint">Exibimos seu Instagram junto do depoimento para dar mais confiança a quem visita o site.</small>
+          <small class="form-field__hint">Se informar, exibimos um link para seu Instagram junto do depoimento, passando mais confiança a quem visita o site.</small>
         </div>
         <div class="form-field form-field--full">
           <label>Comentário *</label>

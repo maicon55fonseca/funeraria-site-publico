@@ -51,8 +51,7 @@ export class DepoimentosPage implements OnInit {
     this.erroMsg = '';
     const instagram = this.form.instagram.trim().replace(/^@/, '');
     if (!this.form.nome.trim()) this.erros['nome'] = 'Informe seu nome.';
-    if (!instagram) this.erros['instagram'] = 'Informe seu @ do Instagram.';
-    else if (!/^[a-zA-Z0-9._]{1,30}$/.test(instagram)) this.erros['instagram'] = 'Informe um @ do Instagram válido.';
+    if (instagram && !/^[a-zA-Z0-9._]{1,30}$/.test(instagram)) this.erros['instagram'] = 'Informe um @ do Instagram válido.';
     if (!this.form.texto.trim() || this.form.texto.trim().length < 5) this.erros['texto'] = 'Escreva um comentário com pelo menos 5 caracteres.';
     if (Object.keys(this.erros).length) {
       this.erroMsg = 'Preencha os campos obrigatórios.';
@@ -63,7 +62,7 @@ export class DepoimentosPage implements OnInit {
     this.api.criarComentario({
       nome: this.form.nome.trim(),
       cidade: this.form.cidade.trim() || undefined,
-      instagram,
+      instagram: instagram || undefined,
       texto: this.form.texto.trim(),
     }).subscribe({
       next: (res) => {
