@@ -103,6 +103,21 @@
           <strong>{{ c.nome }}</strong>
           <span *ngIf="c.cidade"> — {{ c.cidade }}</span>
         </div>
+        <a *ngIf="c.instagram_url" class="comment-card__instagram" [href]="c.instagram_url" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <defs>
+              <radialGradient id="igGradHome" cx="30%" cy="107%" r="150%">
+                <stop offset="0%" stop-color="#fdf497"/>
+                <stop offset="5%" stop-color="#fdf497"/>
+                <stop offset="45%" stop-color="#fd5949"/>
+                <stop offset="60%" stop-color="#d6249f"/>
+                <stop offset="90%" stop-color="#285AEB"/>
+              </radialGradient>
+            </defs>
+            <path fill="url(#igGradHome)" d="M12 2.2c3.2 0 3.6 0 4.9.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9C2.4 3.9 4 2.3 7.1 2.2 8.4 2.2 8.8 2.2 12 2.2m0 1.8c-3.2 0-3.5 0-4.8.1-2.5.1-3.7 1.3-3.8 3.8-.1 1.2-.1 1.6-.1 4.8s0 3.6.1 4.8c.1 2.4 1.3 3.7 3.8 3.8 1.2.1 1.6.1 4.8.1s3.6 0 4.8-.1c2.5-.1 3.7-1.4 3.8-3.8.1-1.2.1-1.6.1-4.8s0-3.6-.1-4.8c-.1-2.5-1.3-3.7-3.8-3.8-1.3-.1-1.6-.1-4.8-.1m0 3.1a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2m0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6m6.5-2.1a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z"/>
+          </svg>
+          &#64;{{ c.instagram }}
+        </a>
       </article>
       <p *ngIf="!depoimentos.length" class="muted">Ainda não há depoimentos publicados.</p>
     </div>

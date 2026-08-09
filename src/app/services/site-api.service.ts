@@ -52,6 +52,8 @@ export interface ComentarioPublico {
   id: number;
   nome: string;
   cidade?: string | null;
+  instagram?: string | null;
+  instagram_url?: string | null;
   texto: string;
   aprovado_em?: string | null;
 }
@@ -97,7 +99,7 @@ export class SiteApiService {
     });
   }
 
-  criarComentario(payload: { nome: string; cidade?: string; texto: string }): Observable<{ message: string }> {
+  criarComentario(payload: { nome: string; cidade?: string; instagram: string; texto: string }): Observable<{ message: string }> {
     const body = { ...payload, dominio: this.dominioAtual() || undefined };
     return this.http.post<{ message: string }>(`${this.base}/comentarios`, body);
   }

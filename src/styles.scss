@@ -158,6 +158,11 @@ p {
   color: #b42318;
 }
 
+.form-field__hint {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
 .alert {
   padding: 0.9rem 1rem;
   border-radius: 12px;
