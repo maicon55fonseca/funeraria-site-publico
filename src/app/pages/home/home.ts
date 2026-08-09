@@ -17,6 +17,7 @@ export class HomePage implements OnInit, OnDestroy {
   depoimentos: ComentarioPublico[] = [];
   bannerSlides: { id: number; url_imagem: string; ordem?: number }[] = [];
   slideIndex = 0;
+  slidePausado = false;
   configLoaded = false;
   loadingPlanos = true;
   loadingDepoimentos = true;
@@ -73,13 +74,25 @@ export class HomePage implements OnInit, OnDestroy {
 
   irParaSlide(i: number): void {
     this.slideIndex = i;
-    this.iniciarSlider();
+    if (!this.slidePausado) {
+      this.iniciarSlider();
+    }
+    this.cdr.detectChanges();
+  }
+
+  alternarPauseSlide(): void {
+    this.slidePausado = !this.slidePausado;
+    if (this.slidePausado) {
+      this.pararSlider();
+    } else {
+      this.iniciarSlider();
+    }
     this.cdr.detectChanges();
   }
 
   private iniciarSlider(): void {
     this.pararSlider();
-    if (this.bannerSlides.length < 2) return;
+    if (this.slidePausado || this.bannerSlides.length < 2) return;
     this.slideTimer = setInterval(() => {
       this.slideIndex = (this.slideIndex + 1) % this.bannerSlides.length;
       this.cdr.detectChanges();

@@ -21,15 +21,27 @@
       <a routerLink="/" fragment="depoimentos" class="btn btn--ghost">Depoimentos</a>
     </div>
   </div>
-  <div class="hero__dots" *ngIf="bannerSlides.length > 1">
+  <div class="hero__controls" *ngIf="bannerSlides.length > 1">
+    <div class="hero__dots">
+      <button
+        type="button"
+        *ngFor="let b of bannerSlides; let i = index"
+        class="hero__dot"
+        [class.active]="i === slideIndex"
+        (click)="irParaSlide(i)"
+        [attr.aria-label]="'Banner ' + (i + 1)"
+      ></button>
+    </div>
     <button
       type="button"
-      *ngFor="let b of bannerSlides; let i = index"
-      class="hero__dot"
-      [class.active]="i === slideIndex"
-      (click)="irParaSlide(i)"
-      [attr.aria-label]="'Banner ' + (i + 1)"
-    ></button>
+      class="hero__pause"
+      (click)="alternarPauseSlide()"
+      [attr.aria-label]="slidePausado ? 'Retomar slides' : 'Pausar slides'"
+      [attr.title]="slidePausado ? 'Retomar slides' : 'Pausar slides'"
+    >
+      <svg *ngIf="!slidePausado" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>
+      <svg *ngIf="slidePausado" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
+    </button>
   </div>
 </section>
 
