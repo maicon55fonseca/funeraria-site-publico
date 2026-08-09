@@ -72,6 +72,20 @@ export interface ComentarioPublico {
   aprovado_em?: string | null;
 }
 
+export interface ParceiroPublico {
+  id: number;
+  nome: string;
+  segmento: string;
+  cidade: string;
+  estado: string;
+  bairro?: string | null;
+  endereco?: string | null;
+  telefone?: string | null;
+  email?: string | null;
+  beneficio: string;
+  url_logo?: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SiteApiService {
   private base = `${environment.apiUrl}/public/site`;
@@ -125,6 +139,19 @@ export class SiteApiService {
     return this.http.get<EnderecoViaCEP>(`${this.base}/cep/${cepLimpo}`).pipe(
       catchError(() => this.http.get<EnderecoViaCEP>(`${VIA_CEP_URL}/${cepLimpo}/json/`))
     );
+  }
+
+  getParceiros(filtros: { cidade?: string; estado?: string; segmento?: string } = {}): Observable<{ data: ParceiroPublico[] }> {
+    let params = this.dominioParams();
+    if (filtros.cidade) params = params.set('cidade', filtros.cidade);
+    if (filtros.estado) params = params.set('estado', filtros.estado);
+    if (filtros.segmento) params = params.set('segmento', filtros.segmento);
+    return this.http.get<{ data: ParceiroPublico[] }>(`${this.base}/parceiros`, { params });
+  }
+
+  criarParceiro(payload: Record<string, unknown>): Observable<{ message: string; data?: { id: number } }> {
+    const body = { ...payload, dominio: this.dominioAtual() || undefined };
+    return this.http.post<{ message: string; data?: { id: number } }>(`${this.base}/parceiros`, body);
   }
 
   criarComentario(payload: { nome: string; cidade?: string; instagram?: string; texto: string; foto?: File }): Observable<{ message: string }> {

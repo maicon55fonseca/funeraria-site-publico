@@ -1,0 +1,100 @@
+.parceiros__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.parceiros__filters {
+  margin-bottom: 1.5rem;
+}
+
+.parceiros__filters-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.5fr 1fr auto;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+
+  input {
+    min-height: 46px;
+    border: 1.5px solid #5f6b73;
+    border-radius: 12px;
+    padding: 0.65rem 0.85rem;
+    font: inherit;
+    background: #fff;
+  }
+}
+
+.parceiros__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.parceiro-card {
+  background: #f3f4f6;
+  border-radius: 16px;
+  padding: 1.15rem;
+  border: 1px solid var(--line);
+}
+
+.parceiro-card__top {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.parceiro-card__logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+
+  &--placeholder {
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: var(--brand);
+    font-size: 1.4rem;
+  }
+}
+
+.parceiro-card h3 {
+  margin: 0;
+  color: var(--brand);
+  font-size: 1.2rem;
+}
+
+.parceiro-card__segmento {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.parceiro-card__label {
+  margin: 0.55rem 0 0.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.parceiro-card__addr,
+.parceiro-card__beneficio,
+.parceiro-card p {
+  margin: 0;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 800px) {
+  .parceiros__filters-row,
+  .parceiros__grid {
+    grid-template-columns: 1fr;
+  }
+}

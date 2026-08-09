@@ -1,0 +1,49 @@
+<section class="section parceiros">
+  <div class="wrap">
+    <div class="parceiros__head">
+      <div>
+        <h1 class="section__title">Parceiros Funerária Aliança</h1>
+        <p class="section__sub">Rede de benefícios para nossos associados. Filtre por cidade, estado ou segmento.</p>
+      </div>
+      <a routerLink="/parceiros/cadastro" class="btn btn--primary">Quero ser parceiro</a>
+    </div>
+
+    <div class="parceiros__filters">
+      <label class="muted">Filtre por cidade, estado ou segmento de sua preferência</label>
+      <div class="parceiros__filters-row">
+        <input [(ngModel)]="filtroCidade" name="filtroCidade" placeholder="Cidade" (keyup.enter)="carregar()" />
+        <input [(ngModel)]="filtroEstado" name="filtroEstado" placeholder="UF" maxlength="2" class="text-uppercase" (keyup.enter)="carregar()" />
+        <input [(ngModel)]="filtroSegmento" name="filtroSegmento" placeholder="Segmento" (keyup.enter)="carregar()" />
+        <button type="button" class="btn btn--primary" (click)="carregar()" [disabled]="loading">
+          {{ loading ? 'Buscando…' : 'Filtrar' }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="muted">Carregando parceiros…</div>
+
+    <div class="parceiros__grid" *ngIf="!loading">
+      <article class="parceiro-card" *ngFor="let p of itens">
+        <div class="parceiro-card__top">
+          <img *ngIf="p.url_logo" [src]="p.url_logo" alt="" class="parceiro-card__logo" />
+          <div class="parceiro-card__logo parceiro-card__logo--placeholder" *ngIf="!p.url_logo">{{ p.nome.slice(0, 1) }}</div>
+          <div>
+            <h3>{{ p.nome }}</h3>
+            <p class="parceiro-card__segmento">{{ p.segmento }}</p>
+          </div>
+        </div>
+        <p class="parceiro-card__label">Endereço do parceiro:</p>
+        <p class="parceiro-card__addr">
+          {{ p.endereco || 'Endereço sob consulta' }}
+          <span *ngIf="p.bairro"> — {{ p.bairro }}</span>
+          — {{ p.cidade }}/{{ p.estado }}
+        </p>
+        <p class="parceiro-card__label">Contato:</p>
+        <p>{{ formatPhone(p.telefone) || p.email || 'Sob consulta' }}</p>
+        <p class="parceiro-card__label">Benefício disponível:</p>
+        <p class="parceiro-card__beneficio">{{ p.beneficio }}</p>
+      </article>
+      <p *ngIf="!itens.length" class="muted">Nenhum parceiro publicado no momento.</p>
+    </div>
+  </div>
+</section>

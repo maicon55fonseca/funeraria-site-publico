@@ -1,0 +1,73 @@
+<section class="section">
+  <div class="wrap parceiro-cadastro">
+    <a routerLink="/parceiros" class="back">← Voltar aos parceiros</a>
+    <h1 class="section__title">Quero ser parceiro da Funerária Aliança</h1>
+    <p class="section__sub">Preencha os dados do seu estabelecimento. Após análise, sua empresa poderá aparecer na nossa rede de benefícios.</p>
+
+    <div class="alert alert--ok" *ngIf="sucesso">
+      Cadastro enviado com sucesso! Nossa equipe irá analisar e publicar após aprovação.
+    </div>
+    <div class="alert alert--err" *ngIf="erroMsg && !sucesso">{{ erroMsg }}</div>
+
+    <form class="form-card" *ngIf="!sucesso" (ngSubmit)="enviar()">
+      <div class="form-grid">
+        <div class="form-field form-field--full">
+          <label>Nome do estabelecimento *</label>
+          <input [(ngModel)]="form.nome" name="nome" />
+          <small class="error" *ngIf="erros['nome']">{{ erros['nome'] }}</small>
+        </div>
+        <div class="form-field">
+          <label>Segmento *</label>
+          <input [(ngModel)]="form.segmento" name="segmento" placeholder="Ex.: Óticas, Farmácia, Saúde" />
+          <small class="error" *ngIf="erros['segmento']">{{ erros['segmento'] }}</small>
+        </div>
+        <div class="form-field">
+          <label>Telefone *</label>
+          <input [(ngModel)]="form.telefone" name="telefone" (input)="maskPhone($event)" maxlength="15" />
+          <small class="error" *ngIf="erros['telefone']">{{ erros['telefone'] }}</small>
+        </div>
+        <div class="form-field">
+          <label>Cidade *</label>
+          <input [(ngModel)]="form.cidade" name="cidade" />
+          <small class="error" *ngIf="erros['cidade']">{{ erros['cidade'] }}</small>
+        </div>
+        <div class="form-field">
+          <label>UF *</label>
+          <input [(ngModel)]="form.estado" name="estado" maxlength="2" class="text-uppercase" />
+          <small class="error" *ngIf="erros['estado']">{{ erros['estado'] }}</small>
+        </div>
+        <div class="form-field">
+          <label>Bairro</label>
+          <input [(ngModel)]="form.bairro" name="bairro" />
+        </div>
+        <div class="form-field">
+          <label>CNPJ</label>
+          <input [(ngModel)]="form.cnpj" name="cnpj" (input)="maskCnpj($event)" maxlength="18" />
+        </div>
+        <div class="form-field form-field--full">
+          <label>Endereço</label>
+          <input [(ngModel)]="form.endereco" name="endereco" />
+        </div>
+        <div class="form-field form-field--full">
+          <label>E-mail</label>
+          <input type="email" [(ngModel)]="form.email" name="email" />
+        </div>
+        <div class="form-field form-field--full">
+          <label>Benefício disponível *</label>
+          <textarea [(ngModel)]="form.beneficio" name="beneficio" rows="4" placeholder="Descreva o benefício para os associados da Funerária Aliança"></textarea>
+          <small class="error" *ngIf="erros['beneficio']">{{ erros['beneficio'] }}</small>
+        </div>
+        <div class="form-field form-field--full">
+          <label>Logo (opcional)</label>
+          <input type="file" accept="image/*" (change)="onLogoSelecionada($event)" />
+          <img *ngIf="form.url_logo" [src]="form.url_logo" alt="" class="logo-preview" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn-block" [disabled]="enviando">
+        <span class="spinner" *ngIf="enviando"></span>
+        {{ enviando ? 'Enviando…' : 'Enviar cadastro' }}
+      </button>
+    </form>
+  </div>
+</section>

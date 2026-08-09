@@ -17,5 +17,13 @@ export const routes: Routes = [
     path: 'depoimentos',
     loadComponent: () => import('./pages/depoimentos/depoimentos').then((m) => m.DepoimentosPage),
   },
+  {
+    path: 'parceiros/cadastro',
+    loadComponent: () => import('./pages/parceiros/parceiro-cadastro').then((m) => m.ParceiroCadastroPage),
+  },
+  {
+    path: 'parceiros',
+    loadComponent: () => import('./pages/parceiros/parceiros').then((m) => m.ParceirosPage),
+  },
   { path: '**', redirectTo: '' },
 ];
