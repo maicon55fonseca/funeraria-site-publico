@@ -4,8 +4,14 @@
       class="hero__slide"
       *ngFor="let b of bannerSlides; let i = index"
       [class.active]="i === slideIndex"
-      [style.backgroundImage]="'url(' + b.url_imagem + ')'"
-    ></div>
+    >
+      <img
+        class="hero__slide-img"
+        [src]="b.url_imagem"
+        [alt]="b.titulo || 'Banner'"
+        loading="eager"
+      />
+    </div>
   </div>
   <div class="hero__veil"></div>
   <div class="wrap hero__content">
