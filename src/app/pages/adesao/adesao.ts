@@ -25,6 +25,27 @@ export class AdesaoPage implements OnInit {
   cepErro = '';
   pixQrCodeUrl: string | null = null;
 
+  readonly diasVencimento = [5, 10, 15, 20, 25, 30];
+  readonly parentescos = [
+    'Cônjuge',
+    'Companheiro(a)',
+    'Filho(a)',
+    'Pai',
+    'Mãe',
+    'Irmão(ã)',
+    'Avô(ó)',
+    'Neto(a)',
+    'Outro',
+  ];
+
+  dependentes: {
+    nome: string;
+    cpf: string;
+    data_nascimento: string;
+    parentesco: string;
+    sexo: string;
+  }[] = [];
+
   form: any = {
     nome: '',
     cpf: '',
@@ -39,6 +60,7 @@ export class AdesaoPage implements OnInit {
     estado: '',
     data_nascimento: '',
     sexo: '',
+    dia_vencimento: 10,
     meio_pagamento: 'boleto',
     cartao_titular: '',
     cartao_numero: '',
@@ -61,6 +83,10 @@ export class AdesaoPage implements OnInit {
         const meios = this.config?.meios_pagamento || ['boleto'];
         if (!meios.includes(this.form.meio_pagamento)) {
           this.form.meio_pagamento = meios[0] || 'boleto';
+        }
+        const diaPadrao = Number(this.config?.dia_vencimento_padrao || 10);
+        if (this.diasVencimento.includes(diaPadrao)) {
+          this.form.dia_vencimento = diaPadrao;
         }
         this.cdr.detectChanges();
       },
@@ -94,9 +120,36 @@ export class AdesaoPage implements OnInit {
   }
 
   maskCpf(ev: Event): void {
-    let v = (ev.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 11);
-    v = v.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    this.form.cpf = v;
+    this.form.cpf = this.formatarCpfInput((ev.target as HTMLInputElement).value);
+  }
+
+  maskCpfDependente(ev: Event, index: number): void {
+    this.dependentes[index].cpf = this.formatarCpfInput((ev.target as HTMLInputElement).value);
+  }
+
+  private formatarCpfInput(raw: string): string {
+    let v = (raw || '').replace(/\D/g, '').slice(0, 11);
+    return v
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  }
+
+  adicionarDependente(): void {
+    if (this.dependentes.length >= 20) return;
+    this.dependentes.push({
+      nome: '',
+      cpf: '',
+      data_nascimento: '',
+      parentesco: '',
+      sexo: '',
+    });
+    this.cdr.detectChanges();
+  }
+
+  removerDependente(index: number): void {
+    this.dependentes.splice(index, 1);
+    this.cdr.detectChanges();
   }
 
   maskPhone(ev: Event): void {
@@ -166,6 +219,9 @@ export class AdesaoPage implements OnInit {
     if (!this.form.nome?.trim()) this.erros['nome'] = 'Informe o nome completo.';
     if ((this.form.cpf || '').replace(/\D/g, '').length !== 11) this.erros['cpf'] = 'CPF inválido.';
     if ((this.form.telefone || '').replace(/\D/g, '').length < 10) this.erros['telefone'] = 'Telefone inválido.';
+    if (!this.diasVencimento.includes(Number(this.form.dia_vencimento))) {
+      this.erros['dia_vencimento'] = 'Escolha o dia de vencimento.';
+    }
     if (!this.form.meio_pagamento) this.erros['meio_pagamento'] = 'Escolha o meio de pagamento.';
     if (this.form.meio_pagamento === 'cartao_credito') {
       if (!this.form.cartao_titular?.trim()) this.erros['cartao_titular'] = 'Informe o nome no cartão.';
@@ -174,6 +230,11 @@ export class AdesaoPage implements OnInit {
       if (!this.form.cartao_ano) this.erros['cartao_ano'] = 'Ano obrigatório.';
       if ((this.form.cartao_cvv || '').length < 3) this.erros['cartao_cvv'] = 'CVV inválido.';
     }
+    this.dependentes.forEach((d, i) => {
+      if (!d.nome?.trim()) this.erros[`dep_${i}_nome`] = 'Informe o nome do dependente.';
+      const cpfDigits = (d.cpf || '').replace(/\D/g, '');
+      if (cpfDigits && cpfDigits.length !== 11) this.erros[`dep_${i}_cpf`] = 'CPF inválido.';
+    });
     return Object.keys(this.erros).length === 0;
   }
 
@@ -194,6 +255,7 @@ export class AdesaoPage implements OnInit {
     const payload: Record<string, unknown> = {
       plano_funerario_id: this.plano.id,
       meio_pagamento: this.form.meio_pagamento,
+      dia_vencimento: Number(this.form.dia_vencimento),
       nome: this.form.nome.trim(),
       cpf: this.form.cpf,
       telefone: this.form.telefone,
@@ -208,6 +270,19 @@ export class AdesaoPage implements OnInit {
       data_nascimento: this.form.data_nascimento || null,
       sexo: this.form.sexo || null,
     };
+
+    const deps = this.dependentes
+      .filter((d) => d.nome?.trim())
+      .map((d) => ({
+        nome: d.nome.trim(),
+        cpf: d.cpf || null,
+        data_nascimento: d.data_nascimento || null,
+        parentesco: d.parentesco || null,
+        sexo: d.sexo || null,
+      }));
+    if (deps.length) {
+      payload['dependentes'] = deps;
+    }
 
     if (this.form.meio_pagamento === 'cartao_credito') {
       payload['cartao_titular'] = this.form.cartao_titular;

@@ -58,6 +58,39 @@
   color: var(--muted);
 }
 
+.dep-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+}
+
+.dependente-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: #fafafa;
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.btn-link {
+  border: 0;
+  background: transparent;
+  color: #b42318;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-add-dep {
+  margin-bottom: 0.5rem;
+}
+
 .pix-pagamento {
   margin-top: 0.75rem;
   text-align: center;

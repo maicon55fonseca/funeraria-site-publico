@@ -102,7 +102,59 @@
           </div>
         </div>
 
+        <h3 class="mt">Dependentes</h3>
+        <p class="muted dep-hint">Opcional. Cadastre cônjuge, filhos e demais dependentes do plano.</p>
+        <div class="dependente-card" *ngFor="let dep of dependentes; let i = index">
+          <div class="dependente-card__head">
+            <strong>Dependente {{ i + 1 }}</strong>
+            <button type="button" class="btn-link" (click)="removerDependente(i)">Remover</button>
+          </div>
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label>Nome completo *</label>
+              <input [(ngModel)]="dep.nome" [name]="'dep_nome_' + i" />
+              <small class="error" *ngIf="erros['dep_' + i + '_nome']">{{ erros['dep_' + i + '_nome'] }}</small>
+            </div>
+            <div class="form-field">
+              <label>CPF</label>
+              <input [(ngModel)]="dep.cpf" [name]="'dep_cpf_' + i" (input)="maskCpfDependente($event, i)" maxlength="14" />
+              <small class="error" *ngIf="erros['dep_' + i + '_cpf']">{{ erros['dep_' + i + '_cpf'] }}</small>
+            </div>
+            <div class="form-field">
+              <label>Data de nascimento</label>
+              <input type="date" [(ngModel)]="dep.data_nascimento" [name]="'dep_nasc_' + i" />
+            </div>
+            <div class="form-field">
+              <label>Parentesco</label>
+              <select [(ngModel)]="dep.parentesco" [name]="'dep_parentesco_' + i">
+                <option value="">Selecione</option>
+                <option *ngFor="let p of parentescos" [value]="p">{{ p }}</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Sexo</label>
+              <select [(ngModel)]="dep.sexo" [name]="'dep_sexo_' + i">
+                <option value="">Selecione</option>
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn--ghost btn-add-dep" (click)="adicionarDependente()">
+          + Adicionar dependente
+        </button>
+
         <h3 class="mt">Pagamento</h3>
+        <div class="form-field">
+          <label>Dia de vencimento das parcelas *</label>
+          <select [(ngModel)]="form.dia_vencimento" name="dia_vencimento">
+            <option *ngFor="let d of diasVencimento" [ngValue]="d">Dia {{ d }}</option>
+          </select>
+          <small class="muted">Escolha o dia em que as mensalidades vão vencer.</small>
+          <small class="error" *ngIf="erros['dia_vencimento']">{{ erros['dia_vencimento'] }}</small>
+        </div>
         <div class="meios">
           <label *ngFor="let m of meios" class="meio">
             <input type="radio" name="meio_pagamento" [value]="m" [(ngModel)]="form.meio_pagamento" />
