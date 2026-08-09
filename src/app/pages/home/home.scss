@@ -3,9 +3,7 @@
   min-height: min(78vh, 640px);
   display: grid;
   align-items: end;
-  background:
-    linear-gradient(135deg, rgba(18, 40, 32, 0.88), rgba(26, 77, 62, 0.55)),
-    url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80') center/cover;
+  background: linear-gradient(135deg, #12281f, #1a4d3e);
   color: #fff;
   overflow: hidden;
 }
