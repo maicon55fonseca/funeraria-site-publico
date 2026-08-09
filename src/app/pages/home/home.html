@@ -9,7 +9,7 @@
   </div>
   <div class="hero__veil"></div>
   <div class="wrap hero__content">
-    <ng-container *ngIf="!bannerSlides.length">
+    <ng-container *ngIf="configLoaded && !bannerSlides.length">
       <p class="hero__eyebrow">Funerária Aliança</p>
       <h1>{{ config?.titulo_hero || 'Cuidado e acolhimento para sua família' }}</h1>
       <p class="hero__sub">

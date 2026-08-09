@@ -17,6 +17,7 @@ export class HomePage implements OnInit, OnDestroy {
   depoimentos: ComentarioPublico[] = [];
   bannerSlides: { id: number; url_imagem: string; ordem?: number }[] = [];
   slideIndex = 0;
+  configLoaded = false;
   loadingPlanos = true;
   loadingDepoimentos = true;
   private slideTimer: ReturnType<typeof setInterval> | null = null;
@@ -32,7 +33,12 @@ export class HomePage implements OnInit, OnDestroy {
         this.config = sanitizeSiteConfigMedia(res.data);
         this.bannerSlides = this.config?.banners || [];
         this.slideIndex = 0;
+        this.configLoaded = true;
         this.iniciarSlider();
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.configLoaded = true;
         this.cdr.detectChanges();
       },
     });
