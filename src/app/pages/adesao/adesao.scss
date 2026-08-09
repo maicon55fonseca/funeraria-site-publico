@@ -58,6 +58,28 @@
   color: var(--muted);
 }
 
+.pix-pagamento {
+  margin-top: 0.75rem;
+  text-align: center;
+
+  &__qrcode {
+    display: block;
+    margin: 0 auto 0.75rem;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    padding: 0.5rem;
+    background: #fff;
+  }
+
+  &__codigo {
+    word-break: break-all;
+    font-size: 0.85rem;
+    background: #f6f6f6;
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem;
+  }
+}
+
 @media (max-width: 900px) {
   .adesao__grid {
     grid-template-columns: 1fr;

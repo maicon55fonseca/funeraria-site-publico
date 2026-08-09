@@ -1,7 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+
+export interface EnderecoViaCEP {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  erro?: boolean;
+}
+
+const VIA_CEP_URL = 'https://viacep.com.br/ws';
 
 export interface SiteConfigPublica {
   dominio?: string | null;
@@ -98,6 +111,20 @@ export class SiteApiService {
     return this.http.get<{ data: ComentarioPublico[] }>(`${this.base}/comentarios`, {
       params: this.dominioParams(),
     });
+  }
+
+  buscarCep(cep: string): Observable<EnderecoViaCEP> {
+    const cepLimpo = (cep || '').replace(/\D/g, '');
+    if (cepLimpo.length !== 8) {
+      return new Observable((observer) => {
+        observer.error({ erro: true, mensagem: 'CEP deve conter 8 dígitos' });
+        observer.complete();
+      });
+    }
+
+    return this.http.get<EnderecoViaCEP>(`${this.base}/cep/${cepLimpo}`).pipe(
+      catchError(() => this.http.get<EnderecoViaCEP>(`${VIA_CEP_URL}/${cepLimpo}/json/`))
+    );
   }
 
   criarComentario(payload: { nome: string; cidade?: string; instagram?: string; texto: string; foto?: File }): Observable<{ message: string }> {

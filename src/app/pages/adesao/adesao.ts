@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import * as QRCode from 'qrcode';
 import { SiteApiService, PlanoPublico, SiteConfigPublica } from '../../services/site-api.service';
 
 @Component({
@@ -20,6 +21,9 @@ export class AdesaoPage implements OnInit {
   sucesso: any = null;
   erroMsg = '';
   erros: Record<string, string> = {};
+  buscandoCep = false;
+  cepErro = '';
+  pixQrCodeUrl: string | null = null;
 
   form: any = {
     nome: '',
@@ -106,6 +110,49 @@ export class AdesaoPage implements OnInit {
     let v = (ev.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 8);
     v = v.replace(/(\d{5})(\d{1,3})/, '$1-$2');
     this.form.cep = v;
+    this.cepErro = '';
+
+    const digits = v.replace(/\D/g, '');
+    if (digits.length === 8) {
+      this.buscarCep(digits);
+    }
+  }
+
+  private gerarQrCodePix(payload: string | null | undefined): void {
+    this.pixQrCodeUrl = null;
+    if (!payload) return;
+    QRCode.toDataURL(payload, { width: 220, margin: 1 })
+      .then((url) => {
+        this.pixQrCodeUrl = url;
+        this.cdr.detectChanges();
+      })
+      .catch(() => {
+        this.pixQrCodeUrl = null;
+      });
+  }
+
+  private buscarCep(cepLimpo: string): void {
+    this.buscandoCep = true;
+    this.api.buscarCep(cepLimpo).subscribe({
+      next: (res) => {
+        this.buscandoCep = false;
+        if (res?.erro) {
+          this.cepErro = 'CEP não encontrado.';
+          this.cdr.detectChanges();
+          return;
+        }
+        this.form.endereco = res.logradouro || this.form.endereco;
+        this.form.bairro = res.bairro || this.form.bairro;
+        this.form.cidade = res.localidade || this.form.cidade;
+        this.form.estado = res.uf || this.form.estado;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.buscandoCep = false;
+        this.cepErro = 'Não foi possível buscar o CEP. Preencha o endereço manualmente.';
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   maskCard(ev: Event): void {
@@ -174,6 +221,7 @@ export class AdesaoPage implements OnInit {
       next: (res) => {
         this.enviando = false;
         this.sucesso = res.data;
+        this.gerarQrCodePix(this.sucesso?.cobranca?.pix_payload);
         this.cdr.detectChanges();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },

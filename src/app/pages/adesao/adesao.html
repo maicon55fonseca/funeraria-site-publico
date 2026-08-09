@@ -9,7 +9,11 @@
       <strong>Adesão realizada com sucesso!</strong>
       <p *ngIf="sucesso.numero_contrato">Contrato nº {{ sucesso.numero_contrato }}</p>
       <p *ngIf="sucesso.cobranca?.mensagem">{{ sucesso.cobranca.mensagem }}</p>
-      <p *ngIf="sucesso.cobranca?.pix_payload"><strong>PIX:</strong> {{ sucesso.cobranca.pix_payload }}</p>
+      <div class="pix-pagamento" *ngIf="sucesso.cobranca?.pix_payload">
+        <img *ngIf="pixQrCodeUrl" [src]="pixQrCodeUrl" alt="QR Code PIX" class="pix-pagamento__qrcode" />
+        <p><strong>PIX copia e cola:</strong></p>
+        <p class="pix-pagamento__codigo">{{ sucesso.cobranca.pix_payload }}</p>
+      </div>
       <a *ngIf="sucesso.cobranca?.url_boleto || sucesso.cobranca?.invoice_url || sucesso.cobranca?.payment_book_url"
          class="btn btn--primary"
          [href]="sucesso.cobranca?.url_boleto || sucesso.cobranca?.invoice_url || sucesso.cobranca?.payment_book_url"
@@ -69,6 +73,8 @@
           <div class="form-field">
             <label>CEP</label>
             <input [(ngModel)]="form.cep" name="cep" (input)="maskCep($event)" maxlength="9" />
+            <small class="muted" *ngIf="buscandoCep">Buscando endereço…</small>
+            <small class="error" *ngIf="cepErro && !buscandoCep">{{ cepErro }}</small>
           </div>
           <div class="form-field">
             <label>Número</label>
