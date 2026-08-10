@@ -72,6 +72,7 @@ export class AdesaoPage implements OnInit {
   form: any = {
     nome: '',
     cpf: '',
+    rg: '',
     telefone: '',
     email: '',
     cep: '',
@@ -350,6 +351,7 @@ export class AdesaoPage implements OnInit {
       dia_vencimento: Number(this.form.dia_vencimento),
       nome: this.form.nome.trim(),
       cpf: this.form.cpf,
+      rg: (this.form.rg || '').toString().trim() || null,
       telefone: this.form.telefone,
       email: this.form.email || null,
       cep: this.form.cep || null,

@@ -59,6 +59,10 @@
             <small class="error" *ngIf="erros['cpf']">{{ erros['cpf'] }}</small>
           </div>
           <div class="form-field">
+            <label>RG</label>
+            <input [(ngModel)]="form.rg" name="rg" maxlength="20" placeholder="Opcional" />
+          </div>
+          <div class="form-field">
             <label>Telefone *</label>
             <input [(ngModel)]="form.telefone" name="telefone" (input)="maskPhone($event)" maxlength="15" required />
             <small class="error" *ngIf="erros['telefone']">{{ erros['telefone'] }}</small>
