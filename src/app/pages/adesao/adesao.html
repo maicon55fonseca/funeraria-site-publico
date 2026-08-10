@@ -13,6 +13,14 @@
         <img *ngIf="pixQrCodeUrl" [src]="pixQrCodeUrl" alt="QR Code PIX" class="pix-pagamento__qrcode" />
         <p><strong>PIX copia e cola:</strong></p>
         <p class="pix-pagamento__codigo">{{ sucesso.cobranca.pix_payload }}</p>
+        <button
+          type="button"
+          class="btn btn--primary pix-pagamento__copiar"
+          [disabled]="copiandoPix"
+          (click)="copiarCodigoPix()"
+        >
+          {{ pixCopiado ? 'Código copiado!' : (copiandoPix ? 'Copiando…' : 'Copiar código') }}
+        </button>
       </div>
       <a *ngIf="sucesso.cobranca?.url_boleto || sucesso.cobranca?.invoice_url || sucesso.cobranca?.payment_book_url"
          class="btn btn--primary"

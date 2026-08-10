@@ -23,6 +23,9 @@ export class AdesaoPage implements OnInit {
   buscandoCep = false;
   cepErro = '';
   pixQrCodeUrl: string | null = null;
+  copiandoPix = false;
+  pixCopiado = false;
+  private pixCopiadoTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly diasVencimento = [5, 10, 15, 20, 25, 30];
   readonly parentescos = [
@@ -242,6 +245,62 @@ export class AdesaoPage implements OnInit {
     const digits = v.replace(/\D/g, '');
     if (digits.length === 8) {
       this.buscarCep(digits);
+    }
+  }
+
+  copiarCodigoPix(): void {
+    const codigo = String(this.sucesso?.cobranca?.pix_payload || '').trim();
+    if (!codigo || this.copiandoPix) return;
+
+    this.copiandoPix = true;
+    this.pixCopiado = false;
+    if (this.pixCopiadoTimer) {
+      clearTimeout(this.pixCopiadoTimer);
+      this.pixCopiadoTimer = null;
+    }
+
+    const marcarCopiado = () => {
+      this.copiandoPix = false;
+      this.pixCopiado = true;
+      this.cdr.detectChanges();
+      this.pixCopiadoTimer = setTimeout(() => {
+        this.pixCopiado = false;
+        this.cdr.detectChanges();
+      }, 2500);
+    };
+
+    const falhou = () => {
+      this.copiandoPix = false;
+      this.erroMsg = 'Não foi possível copiar o código PIX. Selecione e copie manualmente.';
+      this.cdr.detectChanges();
+    };
+
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(codigo).then(marcarCopiado).catch(() => {
+        if (this.copiarTextoFallback(codigo)) marcarCopiado();
+        else falhou();
+      });
+      return;
+    }
+
+    if (this.copiarTextoFallback(codigo)) marcarCopiado();
+    else falhou();
+  }
+
+  private copiarTextoFallback(texto: string): boolean {
+    try {
+      const el = document.createElement('textarea');
+      el.value = texto;
+      el.setAttribute('readonly', '');
+      el.style.position = 'fixed';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(el);
+      return ok;
+    } catch {
+      return false;
     }
   }
 
