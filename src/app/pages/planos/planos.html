@@ -12,6 +12,8 @@
         <div class="plan-card__price">{{ money(p.valor_mensal) }}<small>/mês</small></div>
         <p class="plan-card__meta" *ngIf="p.valor_adesao">Taxa de adesão: {{ money(p.valor_adesao) }}</p>
         <p class="plan-card__meta" *ngIf="p.carencia_dias">Carência: {{ p.carencia_dias }} dias</p>
+        <p class="plan-card__meta" *ngIf="p.quantidade_vidas">Quantidade de pessoas: {{ p.quantidade_vidas }}</p>
+        <p class="plan-card__meta" *ngIf="p.graus_parentesco">Parentescos: {{ p.graus_parentesco }}</p>
         <p>{{ p.descricao || 'Assistência funerária conforme coberturas do plano.' }}</p>
 
         <ul class="plan-itens" *ngIf="p.produtos?.length || p.servicos?.length">
