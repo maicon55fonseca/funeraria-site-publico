@@ -158,8 +158,57 @@ export class AdesaoPage implements OnInit {
       .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
   }
 
+  get maxDependentesIncluidos(): number {
+    const q = Math.max(1, Number(this.plano?.quantidade_vidas || 1));
+    return Math.max(0, q - 1);
+  }
+
+  get parentescosBase(): string[] {
+    const lista = this.plano?.graus_parentesco_lista;
+    if (Array.isArray(lista) && lista.length) return lista;
+    return this.parentescos;
+  }
+
+  get parentescosExtras(): string[] {
+    const lista = this.plano?.graus_parentesco_extras_lista;
+    return Array.isArray(lista) ? lista.filter(Boolean) : [];
+  }
+
+  get permitePessoasExtras(): boolean {
+    return Number(this.plano?.valor_pessoa_extra || 0) > 0 && this.parentescosExtras.length > 0;
+  }
+
+  get podeAdicionarDependente(): boolean {
+    if (this.dependentes.length >= 20) return false;
+    if (this.dependentes.length < this.maxDependentesIncluidos) return true;
+    return this.permitePessoasExtras;
+  }
+
+  get qtdExtrasSelecionadas(): number {
+    return Math.max(0, this.dependentes.length - this.maxDependentesIncluidos);
+  }
+
+  get valorAcrescimoExtras(): number {
+    return this.qtdExtrasSelecionadas * Number(this.plano?.valor_pessoa_extra || 0);
+  }
+
+  parentescosParaDependente(index: number): string[] {
+    if (index >= this.maxDependentesIncluidos) {
+      return this.parentescosExtras.length ? this.parentescosExtras : [];
+    }
+    return this.parentescosBase;
+  }
+
   adicionarDependente(): void {
-    if (this.dependentes.length >= 20) return;
+    if (!this.podeAdicionarDependente) {
+      this.erros = {
+        ...this.erros,
+        dependentes: this.permitePessoasExtras
+          ? 'Limite de pessoas do plano atingido para inclusos; use parentesco extra para adicionar mais.'
+          : `Este plano permite no máximo ${Math.max(1, Number(this.plano?.quantidade_vidas || 1))} pessoa(s) (incluindo o titular).`,
+      };
+      return;
+    }
     this.dependentes.push({
       nome: '',
       cpf: '',
@@ -167,6 +216,7 @@ export class AdesaoPage implements OnInit {
       parentesco: '',
       sexo: '',
     });
+    delete this.erros['dependentes'];
     this.cdr.detectChanges();
   }
 
@@ -259,10 +309,23 @@ export class AdesaoPage implements OnInit {
       if (!this.form.cartao_ano) this.erros['cartao_ano'] = 'Ano obrigatório.';
       if ((this.form.cartao_cvv || '').length < 3) this.erros['cartao_cvv'] = 'CVV inválido.';
     }
+    if (!this.podeAdicionarDependente && this.dependentes.length > this.maxDependentesIncluidos && !this.permitePessoasExtras) {
+      this.erros['dependentes'] = `Este plano permite no máximo ${Math.max(1, Number(this.plano?.quantidade_vidas || 1))} pessoa(s) (incluindo o titular).`;
+    }
+    if (this.dependentes.length > this.maxDependentesIncluidos && !this.permitePessoasExtras) {
+      this.erros['dependentes'] = `Este plano permite no máximo ${Math.max(1, Number(this.plano?.quantidade_vidas || 1))} pessoa(s) (incluindo o titular).`;
+    }
     this.dependentes.forEach((d, i) => {
       if (!d.nome?.trim()) this.erros[`dep_${i}_nome`] = 'Informe o nome do dependente.';
       const cpfDigits = (d.cpf || '').replace(/\D/g, '');
       if (cpfDigits && cpfDigits.length !== 11) this.erros[`dep_${i}_cpf`] = 'CPF inválido.';
+      if (!d.parentesco?.trim()) this.erros[`dep_${i}_parentesco`] = 'Informe o parentesco.';
+      else {
+        const permitidos = this.parentescosParaDependente(i);
+        if (permitidos.length && !permitidos.includes(d.parentesco)) {
+          this.erros[`dep_${i}_parentesco`] = 'Parentesco não permitido para esta vaga.';
+        }
+      }
     });
     return Object.keys(this.erros).length === 0;
   }

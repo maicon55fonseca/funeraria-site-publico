@@ -57,6 +57,10 @@ export interface PlanoPublico {
   carencia_dias?: number | null;
   quantidade_vidas?: number | null;
   graus_parentesco?: string | null;
+  graus_parentesco_lista?: string[] | null;
+  valor_pessoa_extra?: number | string | null;
+  graus_parentesco_extras?: string | null;
+  graus_parentesco_extras_lista?: string[] | null;
   coberturas?: string | null;
   produtos?: PlanoItemPublico[];
   servicos?: PlanoItemPublico[];

@@ -14,6 +14,10 @@
         <p class="plan-card__meta" *ngIf="p.carencia_dias">Carência: {{ p.carencia_dias }} dias</p>
         <p class="plan-card__meta" *ngIf="p.quantidade_vidas">Quantidade de pessoas: {{ p.quantidade_vidas }}</p>
         <p class="plan-card__meta" *ngIf="p.graus_parentesco">Parentescos: {{ p.graus_parentesco }}</p>
+        <p class="plan-card__meta" *ngIf="p.valor_pessoa_extra && +p.valor_pessoa_extra > 0">
+          Pessoa extra: {{ money(p.valor_pessoa_extra) }}/mês
+          <span *ngIf="p.graus_parentesco_extras"> ({{ p.graus_parentesco_extras }})</span>
+        </p>
         <p *ngIf="p.descricao">{{ p.descricao }}</p>
 
         <ul class="plan-itens" *ngIf="p.produtos?.length || p.servicos?.length">

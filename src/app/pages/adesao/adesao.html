@@ -27,8 +27,18 @@
         <h3>{{ plano.nome }}</h3>
         <div class="plan-card__price">{{ money(plano.valor_mensal) }}<small>/mês</small></div>
         <p *ngIf="plano.valor_adesao">Adesão: {{ money(plano.valor_adesao) }}</p>
+        <p *ngIf="plano.quantidade_vidas">Pessoas no plano: {{ plano.quantidade_vidas }} (inclui titular)</p>
+        <p *ngIf="plano.graus_parentesco">Parentescos: {{ plano.graus_parentesco }}</p>
+        <p *ngIf="permitePessoasExtras">
+          Pessoa extra: {{ money(plano.valor_pessoa_extra) }}/mês
+          <span *ngIf="plano.graus_parentesco_extras"> — {{ plano.graus_parentesco_extras }}</span>
+        </p>
+        <p *ngIf="qtdExtrasSelecionadas > 0">
+          Acréscimo estimado: {{ money(valorAcrescimoExtras) }}
+          ({{ qtdExtrasSelecionadas }} pessoa(s) extra)
+        </p>
         <p *ngIf="config?.quantidade_parcelas">Parcelas geradas: {{ config?.quantidade_parcelas }}</p>
-        <p>{{ plano.descricao || 'Finalize seu cadastro para concluir a contratação.' }}</p>
+        <p *ngIf="plano.descricao">{{ plano.descricao }}</p>
         <ul class="resumo-itens" *ngIf="plano.produtos?.length || plano.servicos?.length">
           <li *ngFor="let item of plano.produtos">{{ item.nome }}</li>
           <li *ngFor="let item of plano.servicos">{{ item.nome }}</li>
@@ -103,10 +113,13 @@
         </div>
 
         <h3 class="mt">Dependentes</h3>
-        <p class="muted dep-hint">Opcional. Cadastre cônjuge, filhos e demais dependentes do plano.</p>
+        <p class="muted dep-hint">
+          Incluídos no plano: até {{ maxDependentesIncluidos }} dependente(s).
+          <span *ngIf="permitePessoasExtras"> Além disso, é possível adicionar pessoas extras pagando {{ money(plano?.valor_pessoa_extra) }}/mês cada.</span>
+        </p>
         <div class="dependente-card" *ngFor="let dep of dependentes; let i = index">
           <div class="dependente-card__head">
-            <strong>Dependente {{ i + 1 }}</strong>
+            <strong>Dependente {{ i + 1 }} <span *ngIf="i >= maxDependentesIncluidos" class="muted">(extra)</span></strong>
             <button type="button" class="btn-link" (click)="removerDependente(i)">Remover</button>
           </div>
           <div class="form-grid">
@@ -125,11 +138,12 @@
               <input type="date" [(ngModel)]="dep.data_nascimento" [name]="'dep_nasc_' + i" />
             </div>
             <div class="form-field">
-              <label>Parentesco</label>
+              <label>Parentesco *</label>
               <select [(ngModel)]="dep.parentesco" [name]="'dep_parentesco_' + i">
                 <option value="">Selecione</option>
-                <option *ngFor="let p of parentescos" [value]="p">{{ p }}</option>
+                <option *ngFor="let p of parentescosParaDependente(i)" [value]="p">{{ p }}</option>
               </select>
+              <small class="error" *ngIf="erros['dep_' + i + '_parentesco']">{{ erros['dep_' + i + '_parentesco'] }}</small>
             </div>
             <div class="form-field">
               <label>Sexo</label>
@@ -142,9 +156,14 @@
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn--ghost btn-add-dep" (click)="adicionarDependente()">
+        <button
+          type="button"
+          class="btn btn--ghost btn-add-dep"
+          (click)="adicionarDependente()"
+          [disabled]="!podeAdicionarDependente">
           + Adicionar dependente
         </button>
+        <small class="error" *ngIf="erros['dependentes']">{{ erros['dependentes'] }}</small>
 
         <h3 class="mt">Pagamento</h3>
         <div class="form-field">
